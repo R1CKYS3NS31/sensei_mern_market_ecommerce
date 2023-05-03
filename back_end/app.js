@@ -4,12 +4,14 @@ const cors = require('cors')
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
+// import compress from 'compression' // install
+// import helmet from 'helmet' // install
 require("dotenv").config();
 const { default: mongoose } = require("mongoose");
 
 // route  paths
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/user');
+var indexRouter = require('./routes/index.routes');
+var usersRouter = require('./routes/user.routes');
 
 var app = express();
 
@@ -19,8 +21,12 @@ app.set('view engine', 'jade');
 
 app.use(logger('dev'));
 app.use(express.json());
+app.use(cors())
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+// app.use(compress())
+// secure apps by setting various HTTP headers
+// app.use(helmet())
 app.use(express.static(path.join(__dirname, 'public')));
 
 // database
@@ -37,14 +43,19 @@ const option = {
   family: 4, // Use IPv4, skip trying IPv6
 }
 
+mongoose.Promise = global.Promise
 mongoose.set("strictQuery", true)
 mongoose
   .connect(process.env.MONGO_URL || URL, this.options)// emit options on host
   .then(() => console.log("DB connected successfully!")).catch((err) => console.error(err))
 
-// routes
+mongoose.connection.on('error', () => {
+  throw new Error(`unable to connect to database: ${URL} or ${process.env.MONGO_URL}`)
+})
+
+// mount routes
 app.use('/', indexRouter);
-app.use('/user', usersRouter);
+app.use('/users', usersRouter);
 
 // api routes
 
