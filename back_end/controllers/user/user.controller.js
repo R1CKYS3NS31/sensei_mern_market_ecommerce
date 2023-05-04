@@ -1,6 +1,6 @@
-const { default: dbErrorHandler } = require("../../utils/helpers/dbErrorHandler")
+const { getErrorMessage } = require("../../utils/helpers/dbErrorHandler")
 const User = require('../../models/user.model')
-
+const extend = require('lodash/extend')
 
 const createUser = async (req, res) => {
   const user = new User(req.body)
@@ -11,21 +11,21 @@ const createUser = async (req, res) => {
     })
   } catch (err) {
     return res.status(400).json({
-      error: errorHandler.getErrorMessage(err)
+      error: getErrorMessage(err)
     })
   }
 }
 
 const users = async (req, res) => {
   try {
-    let users = await User.find({}, { name: 1, email: 1, createdAt: 1, updateUserdAt: 1 })
+    let users = await User.find({}, { name: 1, email: 1, createdAt: 1, updatedAt: 1 })
     // let users = await User.find().select('name email updateUserdAt createdAt')
     res.json(users)
   } catch (err) {
     res.status(500).json({
-      error: dbErrorHandler.getErrorMessage(err)
+      error: getErrorMessage(err)
     })
-    console.error(dbErrorHandler.getErrorMessage(err))
+    console.error(getErrorMessage(err))
   }
 }
 
@@ -60,29 +60,33 @@ const updateUser = async (req, res) => {
   try {
     let user = req.profile
     user = extend(user, req.body)
-    user.updateUserd = Date.now()
+    user.updatedAt = Date.now()
     await user.save()
     user.hashed_password = undefined
     user.salt = undefined
+
+    await User.findOneAndUpdate(user)
     res.json(user)
   } catch (err) {
-    return res.status(500).json({
-      error: errorHandler.getErrorMessage(err)
+    res.status(500).json({
+      error: getErrorMessage(err)
     })
+    console.error(err);
   }
 }
 
 const removeUser = async (req, res) => {
   try {
     let user = req.profile
-    let deletedUser = await user.removeUser()
+    let deletedUser = await user.remove()
     deletedUser.hashed_password = undefined
     deletedUser.salt = undefined
     res.json(deletedUser)
   } catch (err) {
-    return res.status(500).json({
-      error: errorHandler.getErrorMessage(err)
+    res.status(500).json({
+      error: getErrorMessage(err)
     })
+    console.error(err);
   }
 }
 

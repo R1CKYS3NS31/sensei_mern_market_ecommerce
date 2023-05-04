@@ -39,4 +39,4 @@ const getErrorMessage = (err) => {
     return message
 }
 
-module.exports = {getErrorMessage}
+module.exports = { getErrorMessage }

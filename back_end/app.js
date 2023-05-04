@@ -12,6 +12,7 @@ const { default: mongoose } = require("mongoose");
 // route  paths
 var indexRouter = require('./routes/index.routes');
 var usersRouter = require('./routes/user.routes');
+const authRouter = require('./routes/auth.routes')
 
 var app = express();
 
@@ -58,6 +59,9 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 // api routes
+app.use('/api/users', usersRouter);
+app.use('/api/auth', authRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
