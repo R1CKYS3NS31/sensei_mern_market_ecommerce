@@ -1,7 +1,7 @@
 const signin = async (user) => {
   try {
     console.log(user);
-    let response = await fetch('http://localhost:9000/api/auth/signin/', {
+    let response = await fetch('http://localhost:9000/api/auth/signin', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -18,7 +18,7 @@ const signin = async (user) => {
 
 const signout = async () => {
   try {
-    let response = await fetch('http://localhost:9000/api/auth/signout/', { method: 'GET' })
+    let response = await fetch('http://localhost:9000/api/auth/signout', { method: 'GET' })
     return await response.json()
   } catch(err) {
     console.log(err)

@@ -4,7 +4,7 @@ const {expressjwt: ejwt } = require('express-jwt')
 const config = require('../../config/config')
 
 const signin = async (req, res) => {
-  console.log(req);
+  console.log("signing...");
   try {
     
     let user = await User.findOne({
@@ -40,10 +40,10 @@ const signin = async (req, res) => {
 
   } catch (err) {
 
-    return res.status('401').json({
+    res.status('401').json({
       error: "Could not sign in"
     })
-
+    console.error(err);
   }
 }
 

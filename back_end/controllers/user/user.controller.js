@@ -43,9 +43,10 @@ const userByID = async (req, res, next, id) => {
     req.profile = user
     next()
   } catch (err) {
-    return res.status(500).json({
+     res.status(500).json({
       error: "Could not retrieve user"
     })
+    console.error(err);
   }
 }
 
