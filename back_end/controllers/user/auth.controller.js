@@ -4,7 +4,9 @@ const {expressjwt: ejwt } = require('express-jwt')
 const config = require('../../config/config')
 
 const signin = async (req, res) => {
+  console.log(req);
   try {
+    
     let user = await User.findOne({
       "email": req.body.email
     })

@@ -13,6 +13,7 @@ router.route('/:userId')
     .get(requireSignin, readUser)
     .put(requireSignin, hasAuthorization, updateUser)
     .delete(requireSignin, hasAuthorization, removeUser)
+    
 
 
 router.param('userId', userByID)

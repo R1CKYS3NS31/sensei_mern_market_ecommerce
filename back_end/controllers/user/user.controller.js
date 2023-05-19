@@ -18,9 +18,9 @@ const createUser = async (req, res) => {
 
 const users = async (req, res) => {
   try {
-    let users = await User.find({}, { name: 1, email: 1, createdAt: 1, updatedAt: 1 })
-    // let users = await User.find().select('name email updateUserdAt createdAt')
-    res.json(users)
+    // let users = await User.find({}, { name: 1, email: 1, createdAt: 1, updatedAt: 1 })
+    let usersData = await User.find().select('name email updatedAt createdAt')
+    res.json(usersData)
   } catch (err) {
     res.status(500).json({
       error: getErrorMessage(err)
@@ -35,6 +35,7 @@ const users = async (req, res) => {
 const userByID = async (req, res, next, id) => {
   try {
     let user = await User.findById(id)
+    console.log(id);
     if (!user)
       return res.status(500).json({
         error: "User not found"

@@ -2,18 +2,18 @@ import styled from '@emotion/styled'
 import React from 'react'
 
 const HeaderContainer = styled('div')({
-display:'flex',
-justifyContent:'center'
+  display: 'flex',
+  justifyContent: 'center'
 })
 const Title = styled('h1')({
-    color:'GrayText'
+  color: 'GrayText'
 })
 
 export const Header = () => {
   return (
     <HeaderContainer>
-        <Title>Header</Title>
+      <Title>Header</Title>
     </HeaderContainer>
-    
+
   )
 }
