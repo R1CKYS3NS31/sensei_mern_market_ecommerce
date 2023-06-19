@@ -22,7 +22,10 @@ app.set('view engine', 'jade');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(cors())
+app.use(cors({
+  origin: 'http://localhost:3000', // Replace with the actual origin of your client application
+  credentials: true, // Allow credentials (cookies, authorization headers)
+}))
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 // app.use(compress())

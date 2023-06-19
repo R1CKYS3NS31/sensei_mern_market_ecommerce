@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
-import auth from './../auth/auth-helper'
-import { read, update } from './api-user.js'
-import { useNavigate } from 'react-router-dom'
-import styled from '@emotion/styled'
-import { Button, Card, CardActions, CardContent, Icon, TextField, Typography } from '@mui/material'
+import React, { useState, useEffect } from 'react';
+import auth from './../auth/auth-helper';
+import { read, update } from './api-user.js';
+import { useNavigate, useParams } from 'react-router-dom';
+import styled from '@emotion/styled';
+import { Button, Card, CardActions, CardContent, FormControlLabel, Icon, Switch, TextField, Typography } from '@mui/material';
 
 const cardContainer = styled('div')({
   maxWidth: 600,
@@ -33,11 +33,11 @@ const submitButton = styled('button')({
   marginBottom: theme => theme.spacing(2)
 });
 
+export const EditProfile = () => {
+  const classes = { cardContainer, title, errorIcon, textField, submitButton };
 
-export const EditProfile = ({ match }) => {
-  const classes = { cardContainer, title, errorIcon, textField, submitButton }
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { userId } = useParams();
   const [values, setValues] = useState({
     name: '',
     password: '',
@@ -45,54 +45,72 @@ export const EditProfile = ({ match }) => {
     open: false,
     error: '',
     redirectToProfile: false
-  })
-  const jwt = auth.isAuthenticated()
+  });
+  const jwt = auth.isAuthenticated();
 
   useEffect(() => {
-    const abortController = new AbortController()
-    const signal = abortController.signal
+    const abortController = new AbortController();
+    const signal = abortController.signal;
 
     read({
-      userId: match.params.userId
-    }, { t: jwt.token }, signal).then((data) => {
-      if (data && data.error) {
-        setValues({ ...values, error: data.error })
-      } else {
-        setValues({ ...values, name: data.name, email: data.email })
-      }
-    })
-    return function cleanup() {
-      abortController.abort()
-    }
+      userId: userId
+    }, { t: jwt.token }, signal)
+      .then((data) => {
+        if (data && data.error) {
+          setValues({ ...values, error: data.error });
+        } else {
+          setValues({ ...values, name: data.name, email: data.email });
+        }
+      })
+      .catch((error) => console.log(error));
 
-  }, [match.params.userId, jwt.token, values])
+    return function cleanup() {
+      abortController.abort();
+    };
+  }, [userId, jwt.token, 
+    // values // this is a bug
+  ]);
+  
 
   const clickSubmit = () => {
     const user = {
       name: values.name || undefined,
       email: values.email || undefined,
-      password: values.password || undefined
-    }
-    update({
-      userId: match.params.userId
-    }, {
-      t: jwt.token
-    }, user).then((data) => {
-      if (data && data.error) {
-        setValues({ ...values, error: data.error })
-      } else {
-        setValues({ ...values, userId: data._id, redirectToProfile: true })
-      }
-    })
-  }
+      password: values.password || undefined,
+      seller: values.seller || undefined
+    };
+    update(
+      {
+        userId: userId
+      },
+      {
+        t: jwt.token
+      },
+      user
+    )
+      .then((data) => {
+        if (data && data.error) {
+          setValues({ ...values, error: data.error });
+        } else {
+          auth.updateUser(data, ()=>{
+            setValues({...values, userId: data._id, redirectToProfile: true})
+          })
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
   const handleChange = name => event => {
-    setValues({ ...values, [name]: event.target.value })
+    setValues({ ...values, [name]: event.target.value });
+  };
+
+  const handleCheck = (event, checked) => {
+    setValues({...values, 'seller': checked})
   }
 
-
-if (values.redirectToProfile) {
-  navigate(`/user/${values.userId}`);
-}
+  if (values.redirectToProfile) {
+    navigate(`/user/${values.userId}`);
+  }
 
   return (
     <Card className={classes.card}>
@@ -103,17 +121,28 @@ if (values.redirectToProfile) {
         <TextField id="name" label="Name" className={classes.textField} value={values.name} onChange={handleChange('name')} margin="normal" /><br />
         <TextField id="email" type="email" label="Email" className={classes.textField} value={values.email} onChange={handleChange('email')} margin="normal" /><br />
         <TextField id="password" type="password" label="Password" className={classes.textField} value={values.password} onChange={handleChange('password')} margin="normal" />
-        <br /> {
-          values.error && (<Typography component="p" color="error">
+        <FormControlLabel
+            control={
+              <Switch classes={{
+                                checked: classes.checked,
+                                bar: classes.bar,
+                              }}
+                      checked={values.seller}
+                      onChange={handleCheck}
+              />}
+            label={values.seller? 'Active' : 'Inactive'}
+          />
+        <br />
+        {values.error && (
+          <Typography component="p" color="error">
             <Icon color="error" className={classes.error}>error</Icon>
             {values.error}
-          </Typography>)
-        }
+          </Typography>
+        )}
       </CardContent>
       <CardActions>
         <Button color="primary" variant="contained" onClick={clickSubmit} className={classes.submit}>Submit</Button>
       </CardActions>
     </Card>
-  )
-}
-
+  );
+};

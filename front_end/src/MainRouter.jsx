@@ -26,11 +26,11 @@ export const MainRouter = () => {
                 // element={!user ? <SignInSide /> : <Home user={user} />}
                 
             /> */}
-            <Route path="/users" element={<Users/>} />
-            <Route path="/signup" element={<Signup/>} />
-            <Route path="/signin" element={<Signin/>} />
-            <Route path="/user/edit/:userId" element={<PrivateRoute component={EditProfile}/>}/>
-            <Route path="/user/:userId" element={<Profile/>} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/signin" element={<Signin />} />
+            <Route path="/user/edit/:userId/*" element={<PrivateRoute component={EditProfile} />} />
+            <Route path="/user/:userId" element={<Profile />} />
 
 
             {/* no route */}

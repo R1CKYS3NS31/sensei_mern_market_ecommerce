@@ -82,7 +82,7 @@ export const Profile = () => {
         <Divider />
         <ListItem>
           <ListItemText primary={"Joined: " + (
-            new Date(user.created)).toDateString()} />
+            new Date(user.createdAt)).toDateString()} />
         </ListItem>
       </List>
     </Paper>

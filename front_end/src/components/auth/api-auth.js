@@ -1,6 +1,5 @@
 const signin = async (user) => {
   try {
-    console.log(user);
     let response = await fetch('http://localhost:9000/api/auth/signin', {
       method: 'POST',
       headers: {
