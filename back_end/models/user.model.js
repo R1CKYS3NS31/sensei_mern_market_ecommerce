@@ -25,10 +25,12 @@ const userSchema = new mongoose.Schema(
             type: Date,
             default: Date.now
         },
-        seller:{
-            type:Boolean,
-            default:false
-        }
+        seller: {
+            type: Boolean,
+            default: false
+        },
+        stripe_seller: {},
+        stripe_customer: {}
     },
     {
         timestamps: true
