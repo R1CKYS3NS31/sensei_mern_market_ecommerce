@@ -103,6 +103,10 @@ const removeShop = async(req,res)=>{
         let deletedShop = shop.remove()
         res.status(200).json(deletedShop)
     } catch (error) {
-        
+        console.error(error);       
+        res.status(400).json({
+            error:errorHandler(error)
+        })
     }
 }
+
