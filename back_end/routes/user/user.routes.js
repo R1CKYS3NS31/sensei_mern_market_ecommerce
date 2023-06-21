@@ -1,6 +1,6 @@
 const express = require('express')
-const { users, userByID, createUser, removeUser, readUser, updateUser, stripe_auth } = require('../controllers/user/user.controller')
-const { requireSignin, hasAuthorization } = require('../controllers/user/auth.controller')
+const { users, userByID, createUser, removeUser, readUser, updateUser, stripe_auth } = require('../../controllers/user/user.controller')
+const { requireSignin, hasAuthorization } = require('../../controllers/user/auth.controller')
 
 const router = express.Router()
 

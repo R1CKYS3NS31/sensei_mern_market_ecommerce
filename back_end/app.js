@@ -10,9 +10,11 @@ require("dotenv").config();
 const { default: mongoose } = require("mongoose");
 
 // route  paths
-var indexRouter = require('./routes/index.routes');
-var usersRouter = require('./routes/user.routes');
-const authRouter = require('./routes/auth.routes')
+var indexRouter = require('./routes//index.routes');
+var usersRouter = require('./routes/user/user.routes');
+const authRouter = require('./routes/user/auth.routes')
+const shopRouter = require('./routes/shop/shop.routes')
+
 
 var app = express();
 
@@ -64,6 +66,7 @@ app.use('/users', usersRouter);
 // api routes
 app.use('/api/users', usersRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/shops',shopRouter)
 
 
 // catch 404 and forward to error handler

@@ -189,5 +189,6 @@ module.exports = {
   removeUser,
   stripe_auth,
   stripeCustomer,
-  createCharge
+  createCharge,
+  isSeller
 }

@@ -1,7 +1,10 @@
-const formidable = require('formidable')
+
 const Shop = require('../../models/shop.model')
 const fs = require('fs')
 const errorHandler = require('../../utils/helpers/dbErrorHandler')
+
+const formidable = require('formidable-serverless')
+
 
 const createShop = (req, res) => {
     let form = new formidable.IncomingForm()
