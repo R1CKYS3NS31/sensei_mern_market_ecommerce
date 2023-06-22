@@ -67,8 +67,13 @@ const updateUser = async (req, res) => {
     user.hashed_password = undefined
     user.salt = undefined
 
-    await User.findOneAndUpdate(user)
-    res.json(user)
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: user._id }, // Find the user by _id
+      { $set: user }, // Update the user object
+      { new: true } // Return the updated user
+    )
+    
+    res.json(updatedUser)
   } catch (err) {
     res.status(500).json({
       error: getErrorMessage(err)

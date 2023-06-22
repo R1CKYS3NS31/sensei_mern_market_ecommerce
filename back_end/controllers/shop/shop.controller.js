@@ -1,8 +1,7 @@
-
 const Shop = require('../../models/shop.model')
 const fs = require('fs')
 const errorHandler = require('../../utils/helpers/dbErrorHandler')
-
+const defaultImage = './images/default.png'
 const formidable = require('formidable-serverless')
 
 
@@ -62,7 +61,7 @@ const photo = (req, res, next) => {
 }
 
 const defaultPhoto = (req, res) => {
-    return res.sendFile(process.cwd() + defaultPhoto)
+    return res.sendFile(process.cwd() + defaultImage)
 }
 
 const readShop = (req, res) => {
