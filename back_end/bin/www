@@ -8,6 +8,7 @@
  var debug = require('debug')('express:server');
  var http = require('http');
  require('dotenv').config()
+ const bidding = require('../controllers/auction/bidding.controller')
  
  /**
   * Get port from environment and store in Express.
@@ -89,4 +90,6 @@
      : 'port ' + addr.port;
    debug('Listening on ' + bind);
  }
- 
+
+//  auction bidding
+bidding(server)

@@ -26,7 +26,7 @@ router.route('/:productId')
 router.route('/image/:productId')
     .get(productPhoto, defaultPhoto)
 
-router.route('/defaultPhoto')
+router.route('/defaultphoto')
     .get(defaultPhoto)
 
 router.route('/:shopId/:productId')

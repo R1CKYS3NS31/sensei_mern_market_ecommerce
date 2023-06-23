@@ -15,6 +15,8 @@ var usersRouter = require('./routes/user/user.routes');
 const authRouter = require('./routes/user/auth.routes')
 const shopRouter = require('./routes/shop/shop.routes')
 const productRouter = require('./routes/product/product.routes')
+const orderRouter = require('./routes/order/order.routes')
+const auctionRouter =  require('./routes/auction/auction.routes')
 
 
 var app = express();
@@ -69,6 +71,8 @@ app.use('/api/users', usersRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/shops', shopRouter)
 app.use('/api/products', productRouter)
+app.use('/api/orders', orderRouter)
+app.use('/api/auctions', auctionRouter)
 
 
 // catch 404 and forward to error handler

@@ -22,6 +22,7 @@
     "mongoose": "^6.8.3",
     "morgan": "~1.9.1",
     "nodemon": "^2.0.20",
+    "socket.io": "^4.7.0",
     "stripe": "^12.9.0"
   }
 }
