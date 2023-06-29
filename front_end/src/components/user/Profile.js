@@ -69,6 +69,7 @@ export const Profile = () => {
       { t: jwt.token },
       signal
     ).then((data) => {
+      console.log('profile user',data);
       if (data.error) {
         setRedirectToSignin(true);
       } else {
@@ -79,7 +80,7 @@ export const Profile = () => {
     return function cleanup() {
       abortController.abort();
     };
-  }, [userId]);
+  }, [userId,jwt.token]);
 
   const removeAuction = (auction) => {
     const updatedAuctions = [...auctions];
@@ -97,6 +98,7 @@ export const Profile = () => {
       { t: jwt.token },
       signal
     ).then((data) => {
+      console.log('profile user',data); // ricky has bugs - read is not being called
       if (data && data.error) {
         setRedirectToSignin(true);
       } else {
@@ -104,10 +106,10 @@ export const Profile = () => {
       }
     });
 
-    return function cleanup() {
-      abortController.abort();
-    };
-  }, [userId]);
+    // return function cleanup() {
+    //   abortController.abort();
+    // };
+  }, [userId,jwt.token]);
 
   if (redirectToSignin) {
     navigate('/signin'); // Use navigate to redirect
@@ -152,7 +154,7 @@ export const Profile = () => {
         </ListItem>
         <Divider />
         <ListItem>
-          <ListItemText primary={`Joined: ${new Date(user.created).toDateString()}`} />
+          <ListItemText primary={`Joined: ${new Date(user.createdAt).toDateString()}`} />
         </ListItem>
       </List>
       <MyOrders />

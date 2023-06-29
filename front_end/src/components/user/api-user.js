@@ -2,16 +2,16 @@ import { config } from "../../utils/config/config"
 
 const create = async (user) => {
   try {
-      let response = await fetch(`${config.host}/api/users/`, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(user)
-      })
+    let response = await fetch(`${config.host}/api/users/`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(user)
+    })
     return await response.json()
-  } catch(err) {
+  } catch (err) {
     console.log(err)
   }
 }
@@ -23,7 +23,7 @@ const list = async (signal) => {
       signal: signal,
     })
     return await response.json()
-  } catch(err) {
+  } catch (err) {
     console.log(err)
   }
 }
@@ -39,8 +39,9 @@ const read = async (params, credentials, signal) => {
         'Authorization': 'Bearer ' + credentials.t
       }
     })
+    console.log('api - read'.response.json());
     return await response.json()
-  } catch(err) {
+  } catch (err) {
     console.log(err)
   }
 }
@@ -57,7 +58,7 @@ const update = async (params, credentials, user) => {
       body: JSON.stringify(user)
     })
     return await response.json()
-  } catch(err) {
+  } catch (err) {
     console.log(err)
   }
 }
@@ -73,14 +74,14 @@ const remove = async (params, credentials) => {
       }
     })
     return await response.json()
-  } catch(err) {
+  } catch (err) {
     console.log(err)
   }
 }
 
 const stripeUpdate = async (params, credentials, auth_code, signal) => {
   try {
-    let response = await fetch (`${config.host}/api/stripe_auth/`+params.userId, {
+    let response = await fetch(`${config.host}/api/stripe_auth/` + params.userId, {
       method: 'PUT',
       signal: signal,
       headers: {
@@ -88,10 +89,10 @@ const stripeUpdate = async (params, credentials, auth_code, signal) => {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + credentials.t
       },
-      body: JSON.stringify({stripe: auth_code})
+      body: JSON.stringify({ stripe: auth_code })
     })
     return await response.json()
-  } catch(err) {
+  } catch (err) {
     console.log(err)
   }
 }
