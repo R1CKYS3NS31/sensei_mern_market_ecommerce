@@ -9,6 +9,9 @@ import { Signin } from './components/auth/Signin';
 import { Profile } from './components/user/Profile';
 import { EditProfile } from './components/user/EditProfile';
 import { PrivateRoute } from './components/auth/PrivateRoute';
+import { Product } from './pages/product/Product';
+import { Cart } from './pages/cart/Cart';
+import { EditProduct } from './pages/product/EditProduct';
 
 
 export const MainRouter = () => {
@@ -32,6 +35,26 @@ export const MainRouter = () => {
             <Route path="/user/edit/:userId/*" element={<PrivateRoute component={EditProfile} />} />
             <Route path="/user/:userId" element={<Profile />} />
 
+        <Route path="/cart" component={<Cart/>}/>
+        <Route path="/product/:productId" component={<Product/>}/>
+        {/* <Route path="/shops/all" component={Shops}/> */}
+        {/* <Route path="/shops/:shopId" component={Shop}/> */}
+
+        {/* <Route path="/order/:orderId" component={Order}/> */}
+        {/* <PrivateRoute path="/seller/orders/:shop/:shopId" component={ShopOrders}/> */}
+
+        {/* <PrivateRoute path="/seller/shops" component={MyShops}/> */}
+        {/* <PrivateRoute path="/seller/shop/new" component={NewShop}/> */}
+        {/* <PrivateRoute path="/seller/shop/edit/:shopId" component={EditShop}/> */}
+        {/* <PrivateRoute path="/seller/:shopId/products/new" component={NewProduct}/> */}
+        {/* <PrivateRoute path="/seller/:shopId/:productId/edit" component={<EditProduct/>}/> */}
+
+        {/* <Route path="/seller/stripe/connect" component={StripeConnect}/> */}
+        {/* <PrivateRoute path="/myauctions" component={MyAuctions}/> */}
+        {/* <PrivateRoute path="/auction/new" component={NewAuction}/> */}
+        {/* <PrivateRoute path="/auction/edit/:auctionId" component={EditAuction}/> */}
+        {/* <Route path="/auction/:auctionId" component={Auction}/> */}
+        {/* <Route path="/auctions/all" component={OpenAuctions}/> */}
 
             {/* no route */}
             <Route

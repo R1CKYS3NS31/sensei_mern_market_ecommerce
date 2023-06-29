@@ -1,52 +1,66 @@
-import React from 'react'
-import styled from '@emotion/styled'
-import { Card, CardContent, CardMedia, Typography } from '@mui/material'
-// import unicornbikeImg from '/assets/images/unicornbike.jpg'
+import React, { useState, useEffect } from 'react';
+import Grid from '@mui/material/Grid';
+import { Categories } from './product/Categories';
+import { Search } from './product/Search';
+import { listCategories, listLatest } from './product/api-product';
+import { Suggestions } from './product/Suggestions';
+import { styled } from '@mui/material';
 
-
-const card = styled('div')({
-  maxWidth: 600,
-  margin: 'auto',
-  marginTop: theme => theme.spacing(5),
-  marginBottom: theme => theme.spacing(5),
+const RootContainer = styled('div')({
+  flexGrow: 1,
+  margin: 30,
 });
-
-const title = styled('div')({
-  padding: theme => `${theme.spacing(3)}px ${theme.spacing(2.5)}px ${theme.spacing(2)}px`,
-  color: theme => theme.palette.openTitle,
-});
-
-const media = styled('div')({
-  minHeight: 400,
-});
-
-const credit = styled('div')({
-  padding: 10,
-  textAlign: 'right',
-  backgroundColor: '#ededed',
-  borderBottom: '1px solid #d0d0d0',
-  '& a':{
-    color: '#3f4771',
-  },
-});
-
-const useStyles = () => ({ card, title, media, credit });
 
 export const Home = () => {
-  const classes = useStyles()
+  const [suggestionTitle, setSuggestionTitle] = useState('Latest Products');
+  const [categories, setCategories] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+
+    listLatest(signal).then((data) => {
+      if (data.error) {
+        console.log(data.error);
+      } else {
+        setSuggestions(data);
+      }
+    });
+
+    return function cleanup() {
+      abortController.abort();
+    };
+  }, []);
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+
+    listCategories(signal).then((data) => {
+      if (data.error) {
+        console.log(data.error);
+      } else {
+        setCategories(data);
+      }
+    });
+
+    return function cleanup() {
+      abortController.abort();
+    };
+  }, []);
 
   return (
-    <Card className={classes.card}>
-      <Typography variant="h2" className={classes.title}>
-        Home Page
-      </Typography>
-      <CardMedia className={classes.media} image={'https://source.unsplash.com/random'} title="Unicorn Bicycle" />
-      
-      <CardContent>
-        <Typography variant="body1" component="p">
-          Welcome to the sensie MERN setup home page.
-        </Typography>
-      </CardContent>
-    </Card>
-  )
+    <RootContainer>
+      <Grid container spacing={2}>
+        <Grid item xs={8} sm={8}>
+          <Search categories={categories} />
+          <Categories categories={categories} />
+        </Grid>
+        <Grid item xs={4} sm={4}>
+          <Suggestions products={suggestions} title={suggestionTitle} />
+        </Grid>
+      </Grid>
+    </RootContainer>
+  );
 }

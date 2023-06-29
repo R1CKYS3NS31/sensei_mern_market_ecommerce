@@ -1,5 +1,5 @@
 import React from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate} from 'react-router-dom'
 import auth from './auth-helper'
 
 export const PrivateRoute = ({ component: Component, ...rest }) => {

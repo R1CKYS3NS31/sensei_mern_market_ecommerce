@@ -1,63 +1,101 @@
-import React from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { AppBar, Button, IconButton, Toolbar, Typography } from '@mui/material'
-import HomeIcon from '@mui/icons-material/Home'
-import auth from './auth/auth-helper'
-import { useNavigate } from 'react-router-dom'
+import React from 'react';
+import { AppBar, Toolbar, Typography, IconButton, Button, Badge } from '@mui/material';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import HomeIcon from '@mui/icons-material/Home';
+import CartIcon from '@mui/icons-material/ShoppingCart';
+import auth from './auth/auth-helper';
+import cart from '../pages/cart/cart-helper';
+
 
 const isActive = (location, path) => {
-  if (location.pathname === path) {
-    return { color: '#ff4081' }
-  } else {
-    return { color: '#ffffff' }
-  }
-}
+  return location.pathname === path ? { color: '#bef67a' } : { color: '#ffffff' };
+};
+
+const isPartActive = (location, path) => {
+  return location.pathname.includes(path) ? { color: '#bef67a' } : { color: '#ffffff' };
+};
+
 const Menu = () => {
-  const navigate = useNavigate()
-  const location = useLocation()
+  const location = useLocation();
+  const navigate = useNavigate();
 
   return (
-    <AppBar position='static'>
+    <AppBar position="static">
       <Toolbar>
-        <Typography variant='h6' color='inherit'>
-          MERN Skeleton
+        <Typography variant="h6" color="inherit" component={Link} to="/">
+          MERN Marketplace
         </Typography>
-        <Link to='/'>
-          <IconButton aria-label='Home' style={isActive(navigate, '/')}>
+        <div>
+          <IconButton aria-label="Home" component={Link} to="/" style={isActive(location, '/')}>
             <HomeIcon />
           </IconButton>
-        </Link>
-        <Link to='/users'>
-          <Button style={isActive(navigate, '/users')}>Users</Button>
-        </Link>
-        {!auth.isAuthenticated() && (
-          <span>
-            <Link to='/signup'>
-              <Button style={isActive(navigate, '/signup')}>Sign up</Button>
-            </Link>
-            <Link to='/signin'>
-              <Button style={isActive(navigate, '/signin')}>Sign In</Button>
-            </Link>
-          </span>
-        )}
-        {auth.isAuthenticated() && (
-          <span>
-            <Link to={'/user/' + auth.isAuthenticated().user._id}>
-              <Button style={isActive(navigate, '/user/' + auth.isAuthenticated().user._id)}>My Profile</Button>
-            </Link>
-            <Button
-              color='inherit'
-              onClick={() => {
-                auth.clearJWT(() => navigate('/'))
-              }}
+          <Button component={Link} to="/shops/all" style={isActive(location, '/shops/all')}>
+            All Shops
+          </Button>
+          <Button component={Link} to="/auctions/all" style={isActive(location, '/auctions/all')}>
+            All Auctions
+          </Button>
+          <Button component={Link} to="/cart" style={isActive(location, '/cart')}>
+            Cart
+            <Badge
+              invisible={false}
+              color="secondary"
+              badgeContent={cart.itemTotal()}
+              sx={{ marginLeft: '7px' }}
             >
-              Sign out
-            </Button>
+              <CartIcon />
+            </Badge>
+          </Button>
+        </div>
+        <div style={{ position: 'absolute', right: '10px' }}>
+          <span style={{ float: 'right' }}>
+            {!auth.isAuthenticated() && (
+              <span>
+                <Button component={Link} to="/signup" style={isActive(location, '/signup')}>
+                  Sign up
+                </Button>
+                <Button component={Link} to="/signin" style={isActive(location, '/signin')}>
+                  Sign In
+                </Button>
+              </span>
+            )}
+            {auth.isAuthenticated() && (
+              <span>
+                {auth.isAuthenticated().user.seller && (
+                  <>
+                    <Button component={Link} to="/seller/shops" style={isPartActive(location, '/seller/')}>
+                      My Shops
+                    </Button>
+                    <Button component={Link} to="/myauctions" style={isPartActive(location, '/myauctions')}>
+                      My Auctions
+                    </Button>
+                  </>
+                )}
+                <Button
+                  component={Link}
+                  to={`/user/${auth.isAuthenticated().user._id}`}
+                  style={isActive(location, `/user/${auth.isAuthenticated().user._id}`)}
+                >
+                  My Profile
+                </Button>
+                <Button
+                  color="inherit"
+                  onClick={() => {
+                    auth.clearJWT(() => {
+                      navigate('/');
+                    });
+                  }}
+                >
+                  Sign out
+                </Button>
+              </span>
+            )}
           </span>
-        )}
+        </div>
       </Toolbar>
     </AppBar>
-  )
-}
+ 
+ );
+};
 
-export default Menu
+export default Menu;
