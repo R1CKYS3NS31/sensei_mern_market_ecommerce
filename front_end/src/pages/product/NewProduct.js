@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { styled } from '@mui/system';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -7,37 +8,37 @@ import TextField from '@mui/material/TextField';
 import FileUpload from '@mui/icons-material/AddPhotoAlternate';
 import Typography from '@mui/material/Typography';
 import Icon from '@mui/material/Icon';
-import { styled } from '@mui/material/styles';
 import { create } from './api-product.js';
 import { Link, useNavigate } from 'react-router-dom';
+import auth from '../../components/auth/auth-helper.js';
 
 const CardContainer = styled(Card)({
   maxWidth: 600,
   margin: 'auto',
   textAlign: 'center',
-  marginTop: theme => theme.spacing(5),
-  paddingBottom: theme => theme.spacing(2),
-});
-
-const ErrorMessage = styled(Typography)({
-  verticalAlign: 'middle',
+  marginTop: '5px',
+  paddingBottom: '2px',
 });
 
 const Title = styled(Typography)({
-  marginTop: theme => theme.spacing(2),
-  color: theme => theme.palette.openTitle,
+  marginTop: '2px',
+  color: 'primary',
   fontSize: '1.2em',
 });
 
-const TextFieldContainer = styled(TextField)({
-  marginLeft: theme => theme.spacing(1),
-  marginRight: theme => theme.spacing(1),
-  width: 300,
+const ErrorText = styled(Typography)({
+  verticalAlign: 'middle',
+});
+
+const TextFieldStyled = styled(TextField)({
+  marginLeft: '1px',
+  marginRight: '1px',
+  width: '300px',
 });
 
 const SubmitButton = styled(Button)({
   margin: 'auto',
-  marginBottom: theme => theme.spacing(2),
+  marginBottom: '2px',
 });
 
 const Input = styled('input')({
@@ -49,7 +50,6 @@ const FileName = styled('span')({
 });
 
 export const NewProduct = ({ match }) => {
-  const navigate = useNavigate();
   const [values, setValues] = useState({
     name: '',
     description: '',
@@ -57,11 +57,13 @@ export const NewProduct = ({ match }) => {
     category: '',
     quantity: '',
     price: '',
-    redirect: false,
     error: '',
   });
 
-  const handleChange = name => event => {
+  const navigate = useNavigate();
+  const jwt = auth.isAuthenticated()
+
+  const handleChange = (name) => (event) => {
     const value = name === 'image' ? event.target.files[0] : event.target.value;
     setValues({ ...values, [name]: value });
   };
@@ -83,42 +85,32 @@ export const NewProduct = ({ match }) => {
         t: jwt.token,
       },
       productData
-    ).then(data => {
+    ).then((data) => {
       if (data.error) {
         setValues({ ...values, error: data.error });
       } else {
-        setValues({ ...values, error: '', redirect: true });
+        setValues({ ...values, error: '' });
+        navigate('/seller/shop/edit/' + match.params.shopId);
       }
     });
   };
-
-  if (values.redirect) {
-    navigate('/seller/shop/edit/' + match.params.shopId);
-  }
 
   return (
     <div>
       <CardContainer>
         <CardContent>
-          <Title type="headline" component="h2">
-            New Product
-          </Title>
+          <Title variant="h2">New Product</Title>
           <br />
-          <Input
-            accept="image/*"
-            onChange={handleChange('image')}
-            id="icon-button-file"
-            type="file"
-          />
+          <Input accept="image/*" onChange={handleChange('image')} id="icon-button-file" type="file" />
           <label htmlFor="icon-button-file">
-            <Button variant="contained" color="secondary" component="span">
+            <SubmitButton variant="contained" color="secondary" component="span">
               Upload Photo
               <FileUpload />
-            </Button>
+            </SubmitButton>
           </label>{' '}
           <FileName>{values.image ? values.image.name : ''}</FileName>
           <br />
-          <TextFieldContainer
+          <TextFieldStyled
             id="name"
             label="Name"
             value={values.name}
@@ -126,17 +118,17 @@ export const NewProduct = ({ match }) => {
             margin="normal"
           />
           <br />
-          <TextFieldContainer
+          <TextFieldStyled
             id="multiline-flexible"
             label="Description"
             multiline
-            rows="2"
+            rows={2}
             value={values.description}
             onChange={handleChange('description')}
             margin="normal"
           />
           <br />
-          <TextFieldContainer
+          <TextFieldStyled
             id="category"
             label="Category"
             value={values.category}
@@ -144,7 +136,7 @@ export const NewProduct = ({ match }) => {
             margin="normal"
           />
           <br />
-          <TextFieldContainer
+          <TextFieldStyled
             id="quantity"
             label="Quantity"
             value={values.quantity}
@@ -153,7 +145,7 @@ export const NewProduct = ({ match }) => {
             margin="normal"
           />
           <br />
-          <TextFieldContainer
+          <TextFieldStyled
             id="price"
             label="Price"
             value={values.price}
@@ -161,25 +153,22 @@ export const NewProduct = ({ match }) => {
             type="number"
             margin="normal"
           />
-          <br />
           {values.error && (
-            <Typography component="p" color="error">
-              <Icon color="error" className={classes.error}>
-                error
-              </Icon>
+            <ErrorText component="p" color="error">
+              <Icon color="error">error</Icon>
               {values.error}
-            </Typography>
+            </ErrorText>
           )}
         </CardContent>
         <CardActions>
           <SubmitButton color="primary" variant="contained" onClick={clickSubmit}>
             Submit
           </SubmitButton>
-          <Link to={'/seller/shop/edit/' + match.params.shopId} className={classes.submit}>
-            <Button variant="contained">Cancel</Button>
+          <Link to={'/seller/shop/edit/' + match.params.shopId}>
+            <SubmitButton variant="contained">Cancel</SubmitButton>
           </Link>
         </CardActions>
       </CardContainer>
     </div>
   );
-};
+}
