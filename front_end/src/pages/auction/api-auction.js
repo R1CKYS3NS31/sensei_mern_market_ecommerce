@@ -1,14 +1,14 @@
 import { config } from "../../utils/config/config"
 
-const create = async (params, credentials, shop) => {
+const create = async (params, credentials, auction) => {
   try {
-    let response = await fetch(`${config.host}/api/shops/by/` + params.userId, {
+    let response = await fetch(`${config.host}/api/auctions/by/` + params.userId, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Authorization': 'Bearer ' + credentials.t
       },
-      body: shop
+      body: auction
     })
     return response.json()
   } catch (err) {
@@ -16,9 +16,9 @@ const create = async (params, credentials, shop) => {
   }
 }
 
-const list = async (signal) => {
+const listOpen = async (signal) => {
   try {
-    let response = await fetch(`${config.host}/api/shops`, {
+    let response = await fetch(`${config.host}/api/auctions`, {
       method: 'GET',
       signal: signal
     })
@@ -28,9 +28,25 @@ const list = async (signal) => {
   }
 }
 
-const listByOwner = async (params, credentials, signal) => {
+const listBySeller = async (params, credentials, signal) => {
   try {
-    let response = await fetch(`${config.host}/api/shops/by/` + params.userId, {
+    let response = await fetch(`${config.host}/api/auctions/by/` + params.userId, {
+      method: 'GET',
+      signal: signal,
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ' + credentials.t
+      }
+    })
+    return response.json()
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+const listByBidder = async (params, credentials, signal) => {
+  try {
+    let response = await fetch(`${config.host}/api/auctions/bid/` + params.userId, {
       method: 'GET',
       signal: signal,
       headers: {
@@ -46,7 +62,7 @@ const listByOwner = async (params, credentials, signal) => {
 
 const read = async (params, signal) => {
   try {
-    let response = await fetch(`${config.host}/api/shop/` + params.shopId, {
+    let response = await fetch(`${config.host}/api/auction/` + params.auctionId, {
       method: 'GET',
       signal: signal,
     })
@@ -56,15 +72,15 @@ const read = async (params, signal) => {
   }
 }
 
-const update = async (params, credentials, shop) => {
+const update = async (params, credentials, auction) => {
   try {
-    let response = await fetch(`${config.host}/api/shops/` + params.shopId, {
+    let response = await fetch(`${config.host}/api/auctions/` + params.auctionId, {
       method: 'PUT',
       headers: {
         'Accept': 'application/json',
         'Authorization': 'Bearer ' + credentials.t
       },
-      body: shop
+      body: auction
     })
     return response.json()
   } catch (err) {
@@ -74,7 +90,7 @@ const update = async (params, credentials, shop) => {
 
 const remove = async (params, credentials) => {
   try {
-    let response = await fetch(`${config.host}/api/shops/` + params.shopId, {
+    let response = await fetch(`${config.host}/api/auctions/` + params.auctionId, {
       method: 'DELETE',
       headers: {
         'Accept': 'application/json',
@@ -90,8 +106,9 @@ const remove = async (params, credentials) => {
 
 export {
   create,
-  list,
-  listByOwner,
+  listOpen,
+  listBySeller,
+  listByBidder,
   read,
   update,
   remove

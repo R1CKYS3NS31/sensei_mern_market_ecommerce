@@ -1,6 +1,8 @@
+import { config } from "../../utils/config/config"
+
 const create = async (user) => {
   try {
-      let response = await fetch('http://localhost:9000/api/users/', {
+      let response = await fetch(`${config.host}/api/users/`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -16,11 +18,10 @@ const create = async (user) => {
 
 const list = async (signal) => {
   try {
-    let response = await fetch('http://localhost:9000/api/users/', {
+    let response = await fetch(`${config.host}/api/users/`, {
       method: 'GET',
       signal: signal,
     })
-    // console.log(await response.json());
     return await response.json()
   } catch(err) {
     console.log(err)
@@ -29,7 +30,7 @@ const list = async (signal) => {
 
 const read = async (params, credentials, signal) => {
   try {
-    let response = await fetch('http://localhost:9000/api/users/' + params.userId, {
+    let response = await fetch(`${config.host}/api/users/` + params.userId, {
       method: 'GET',
       signal: signal,
       headers: {
@@ -46,7 +47,7 @@ const read = async (params, credentials, signal) => {
 
 const update = async (params, credentials, user) => {
   try {
-    let response = await fetch('http://localhost:9000/api/users/' + params.userId, {
+    let response = await fetch(`${config.host}/api/users/` + params.userId, {
       method: 'PUT',
       headers: {
         'Accept': 'application/json',
@@ -63,7 +64,7 @@ const update = async (params, credentials, user) => {
 
 const remove = async (params, credentials) => {
   try {
-    let response = await fetch('http://localhost:9000/api/users/' + params.userId, {
+    let response = await fetch(`${config.host}/api/users/` + params.userId, {
       method: 'DELETE',
       headers: {
         'Accept': 'application/json',
@@ -77,10 +78,29 @@ const remove = async (params, credentials) => {
   }
 }
 
+const stripeUpdate = async (params, credentials, auth_code, signal) => {
+  try {
+    let response = await fetch (`${config.host}/api/stripe_auth/`+params.userId, {
+      method: 'PUT',
+      signal: signal,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + credentials.t
+      },
+      body: JSON.stringify({stripe: auth_code})
+    })
+    return await response.json()
+  } catch(err) {
+    console.log(err)
+  }
+}
+
 export {
   create,
   list,
   read,
   update,
-  remove
+  remove,
+  stripeUpdate
 }

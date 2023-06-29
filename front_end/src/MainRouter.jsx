@@ -18,6 +18,14 @@ import { MyShops } from './pages/shop/MyShops';
 import { NewShop } from './pages/shop/NewShop';
 import { EditShop } from './pages/shop/EditShop';
 import { NewProduct } from './pages/product/NewProduct';
+import { Order } from './pages/order/Order';
+import { ShopOrders } from './pages/order/ShopOrders';
+import StripeConnect from './components/user/StripeConnect';
+import { MyAuctions } from './pages/auction/MyAuctions';
+import { NewAuction } from './pages/auction/NewAuction';
+import { EditAuction } from './pages/auction/EditAuction';
+import { Auction } from './pages/auction/Auction';
+import { OpenAuctions } from './pages/auction/OpenAuctions';
 
 
 export const MainRouter = () => {
@@ -46,8 +54,8 @@ export const MainRouter = () => {
             <Route path="/shops/all" component={<Shops />} />
             <Route path="/shops/:shopId" component={<Shop />} />
 
-            {/* <Route path="/order/:orderId" component={Order}/> */}
-            {/* <PrivateRoute path="/seller/orders/:shop/:shopId" component={<ShopOrders}/> */}
+            <Route path="/order/:orderId" component={<Order />} />
+            <Route path="/seller/orders/:shop/:shopId" element={<PrivateRoute component={ShopOrders} />} />
 
             <Route path="/seller/shops" element={<PrivateRoute component={MyShops} />} />
             <Route path="/seller/shop/new" element={<PrivateRoute component={NewShop} />} />
@@ -55,12 +63,12 @@ export const MainRouter = () => {
             <Route path="/seller/:shopId/products/new" element={<PrivateRoute component={NewProduct} />} />
             <Route path="/seller/:shopId/:productId/edit" element={<PrivateRoute component={EditProduct} />} />
 
-            {/* <Route path="/seller/stripe/connect" component={StripeConnect}/> */}
-            {/* <PrivateRoute path="/myauctions" component={MyAuctions}/> */}
-            {/* <PrivateRoute path="/auction/new" component={NewAuction}/> */}
-            {/* <PrivateRoute path="/auction/edit/:auctionId" component={EditAuction}/> */}
-            {/* <Route path="/auction/:auctionId" component={Auction}/> */}
-            {/* <Route path="/auctions/all" component={OpenAuctions}/> */}
+            <Route path="/seller/stripe/connect" component={<StripeConnect />} />
+            <Route path="/myauctions" element={<PrivateRoute component={MyAuctions} />} />
+            <Route path="/auction/new" element={<PrivateRoute component={NewAuction} />} />
+            <Route path="/auction/edit/:auctionId" element={<PrivateRoute component={EditAuction} />} />
+            <Route path="/auction/:auctionId" component={Auction}/>
+            <Route path="/auctions/all" component={OpenAuctions}/>
 
             {/* no route */}
             <Route
