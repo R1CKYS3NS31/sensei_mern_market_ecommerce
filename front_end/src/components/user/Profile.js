@@ -13,8 +13,7 @@ import Typography from '@mui/material/Typography';
 import EditIcon from '@mui/icons-material/Edit';
 import PersonIcon from '@mui/icons-material/Person';
 import Divider from '@mui/material/Divider';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { read } from './api-user.js';
 import stripeButton from '../../assets/images/stripeButton.png';
 import auth from '../auth/auth-helper.js';
@@ -53,19 +52,20 @@ const AuctionsPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: '#3f3f3f0d',
 }));
 
-export const Profile = ({ match }) => {
+export const Profile = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState({});
   const [redirectToSignin, setRedirectToSignin] = useState(false);
   const jwt = auth.isAuthenticated();
   const [auctions, setAuctions] = useState([]);
+  const { userId } = useParams(); // Use useParams hook
 
   useEffect(() => {
     const abortController = new AbortController();
     const signal = abortController.signal;
 
     listByBidder(
-      { userId: match.params.userId },
+      { userId: userId },
       { t: jwt.token },
       signal
     ).then((data) => {
@@ -79,7 +79,7 @@ export const Profile = ({ match }) => {
     return function cleanup() {
       abortController.abort();
     };
-  }, []);
+  }, [userId]);
 
   const removeAuction = (auction) => {
     const updatedAuctions = [...auctions];
@@ -93,7 +93,7 @@ export const Profile = ({ match }) => {
     const signal = abortController.signal;
 
     read(
-      { userId: match.params.userId },
+      { userId: userId },
       { t: jwt.token },
       signal
     ).then((data) => {
@@ -107,7 +107,7 @@ export const Profile = ({ match }) => {
     return function cleanup() {
       abortController.abort();
     };
-  }, [match.params.userId]);
+  }, [userId]);
 
   if (redirectToSignin) {
     navigate('/signin'); // Use navigate to redirect
